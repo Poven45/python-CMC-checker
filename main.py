@@ -1,10 +1,32 @@
 import bs4
 import requests
-
+import smtplib
 dialogue = ("Enter cryptos you want to know the price of\n"
             "If there are multiple coins/tokens then do this:\n"
             "(Start with your first coin)Ex: bitcoin, shiba inu, polygon, titano, etc\n"
             "Then just hit enter:\n")
+cryptoSend = ""
+# The email you want to use to send emails to yourself, can be the same one
+# YOU NEED A APP SPECIFIC PASSWORD: https://support.google.com/accounts/answer/185833?hl=en
+email = ""
+emailPassword = ""
+# The email you want to be able to receive emails for updates
+emailRec = ""
+# The smtp for your email provider, followed by port number
+# ex: "smtp.gmail.com", "smtp.mail.yahoo.com", smtp-mail.hotmail.com
+# may need to change this to your email port number for smtp
+emailServer = smtplib.SMTP('smtp.gmail.com', 587)
+type(emailServer)
+# starts connection
+emailServer.ehlo()
+# encryption
+emailServer.starttls()
+emailServer.login(email, emailPassword)
+
+emailSubject = 'Subject: Here is your crypto update! \n\n'
+
+# input the coins/tokens below that you want to see
+# cryptos = "bitcoin, polygon, shiba inu"
 cryptos = input(dialogue)
 crypto = cryptos.split(", ")
 
@@ -58,12 +80,22 @@ for i in cryptoSite:
 
     if(changeCheck[0] == '0' and upOrDown[0] == 'Down'):
         print(f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(-{change} cents) in 24hrs')
+        cryptoSend = cryptoSend + (
+            f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(-{change} cents) in 24hrs')
     elif(changeCheck[0] == '0' and upOrDown[0] == 'Up'):
         print(f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(+{change} cents) in 24hrs')
+        cryptoSend = cryptoSend + (
+            f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(+{change} cents) in 24hrs')
 
     if(changeCheck[0] != '0' and upOrDown[0] == 'Down'):
         print(f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(-{change} dollars) in 24hrs')
+        cryptoSend = cryptoSend + (
+            f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(-{change} dollars) in 24hrs')
     elif(changeCheck[0] != '0' and upOrDown[0] == 'Up'):
         print(f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(+{change} dollars) in 24hrs')
-
+        cryptoSend = cryptoSend + (
+            f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(+{change} cents) in 24hrs')
     counter = counter + 1
+    cryptoSend = cryptoSend + '\n' + '\n'
+# from goes first, then to
+emailServer.sendmail(email, emailRec, emailSubject + cryptoSend)
