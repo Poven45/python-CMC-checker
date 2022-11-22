@@ -5,7 +5,8 @@ dialogue = ("Enter cryptos you want to know the price of\n"
             "If there are multiple coins/tokens then do this:\n"
             "(Start with your first coin)Ex: bitcoin, shiba inu, polygon, titano, etc\n"
             "Then just hit enter:\n")
-cryptoSend = ""
+# If you want to use this without the email part just comment out lines 19-25 and 102
+sendEmail = ""
 # The email you want to use to send emails to yourself, can be the same one
 # YOU NEED A APP SPECIFIC PASSWORD: https://support.google.com/accounts/answer/185833?hl=en
 email = ""
@@ -80,22 +81,22 @@ for i in cryptoSite:
 
     if(changeCheck[0] == '0' and upOrDown[0] == 'Down'):
         print(f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(-{change} cents) in 24hrs')
-        cryptoSend = cryptoSend + (
+        sendEmail = sendEmail + (
             f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(-{change} cents) in 24hrs')
     elif(changeCheck[0] == '0' and upOrDown[0] == 'Up'):
         print(f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(+{change} cents) in 24hrs')
-        cryptoSend = cryptoSend + (
+        sendEmail = sendEmail + (
             f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(+{change} cents) in 24hrs')
 
     if(changeCheck[0] != '0' and upOrDown[0] == 'Down'):
         print(f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(-{change} dollars) in 24hrs')
-        cryptoSend = cryptoSend + (
+        sendEmail = sendEmail + (
             f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(-{change} dollars) in 24hrs')
     elif(changeCheck[0] != '0' and upOrDown[0] == 'Up'):
         print(f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(+{change} dollars) in 24hrs')
-        cryptoSend = cryptoSend + (
+        sendEmail = sendEmail + (
             f'{crypto[counter]} is {element[0].text}. It is {upOrDown[0]} {percentChange[0].text}(+{change} cents) in 24hrs')
     counter = counter + 1
-    cryptoSend = cryptoSend + '\n' + '\n'
+    sendEmail = sendEmail + '\n' + '\n'
 # from goes first, then to
-emailServer.sendmail(email, emailRec, emailSubject + cryptoSend)
+emailServer.sendmail(email, emailRec, emailSubject + sendEmail)
